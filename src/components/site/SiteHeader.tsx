@@ -30,6 +30,15 @@ export default function SiteHeader() {
           ))}
         </nav>
 
+        <div className="header-ctas">
+          <Link href="/contact" className="btn-secondary btn-sm">
+            Book a Demo
+          </Link>
+          <Link href="/portals" className="btn-primary btn-sm">
+            Visit Portals
+          </Link>
+        </div>
+
         <button
           type="button"
           className="mobile-toggle"
@@ -61,6 +70,14 @@ export default function SiteHeader() {
                 {item.label}
               </Link>
             ))}
+            <div style={{ display: "flex", gap: "10px", paddingTop: "14px", flexWrap: "wrap" }}>
+              <Link href="/contact" className="btn-secondary btn-sm" onClick={() => setOpen(false)}>
+                Book a Demo
+              </Link>
+              <Link href="/portals" className="btn-primary btn-sm" onClick={() => setOpen(false)}>
+                Visit Portals
+              </Link>
+            </div>
           </div>
         </div>
       )}

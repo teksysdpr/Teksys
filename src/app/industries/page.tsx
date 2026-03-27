@@ -42,7 +42,7 @@ export default function IndustriesPage() {
       <section className="page-hero">
         <div className="container-site" style={{ maxWidth: "900px" }}>
           <div className="eyebrow">Industries</div>
-          <h1 className="page-title">Industry-Specific Thinking for Complex Delivery Environments</h1>
+          <h1 className="page-title">Focused on the Industries Where Control Matters Most</h1>
           <p className="lead" style={{ marginTop: "16px", maxWidth: "760px" }}>
             Teksys solutions are shaped around how project organizations actually function across design coordination,
             operational governance, execution control, and management reporting.

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { platforms } from "@/lib/site-data";
 
 export const metadata: Metadata = {
   title: "Portals | Teksys",
@@ -8,76 +9,49 @@ export const metadata: Metadata = {
 };
 
 const portals = [
-  {
-    id: "teksysbim",
-    name: "TeksysBIM",
-    pillar: "Design Intelligence",
-    colorHex: "#7df5b5",
-    tagline: "Design Intelligence for Coordinated Construction Delivery",
-    description:
-      "TeksysBIM helps construction and engineering teams transform CAD and design information into intelligent BIM workflows — improving coordination quality, review readiness, and downstream decision-making across the project lifecycle.",
-    portal: "https://bim.teksys.in",
-    portalCta: "Visit TeksysBIM",
-    capabilities: [
-      "BIM coordination and clash detection support across disciplines",
-      "Model-based design review with structured feedback and approvals",
-      "Level of Development (LOD) tracking across design stages",
-      "CAD to BIM conversion workflows and review readiness checks",
-      "BIM Execution Plan structure and deliverable tracking",
-      "Design data connected to downstream project decisions",
-    ],
-  },
-  {
-    id: "teksyserp",
-    name: "TeksysERP",
-    pillar: "Operational Intelligence",
-    colorHex: "#93cdf6",
-    tagline: "Operational Control Across the Full Business Workflow",
-    description:
-      "TeksysERP supports project-driven companies with integrated controls across procurement, inventory, contracts, finance, HR, CRM, and process automation — giving leadership and operations teams stronger governance and real-time business visibility.",
-    portal: "https://erp.teksys.in",
-    portalCta: "Visit TeksysERP",
-    capabilities: [
-      "Procurement workflows with vendor management and approval controls",
-      "Inventory and stores: material tracking, indent and stock movement",
-      "Contract administration with milestones, payments, and compliance",
-      "Finance and accounting linked to projects, budgets, and payments",
-      "HR, attendance, leave management, and payroll for project teams",
-      "CRM and business development pipeline management",
-    ],
-  },
-  {
-    id: "teksysdpr",
-    name: "TeksysDPR",
-    pillar: "Execution Intelligence",
-    colorHex: "#d4f7a6",
-    tagline: "Execution Visibility That Drives Project Control",
-    description:
-      "TeksysDPR provides structured daily progress reporting, delay monitoring, target achievement tracking, and decision-ready project control dashboards — creating reporting discipline and real-time visibility for delivery teams and project leadership.",
-    portal: "https://dpr.teksys.in",
-    portalCta: "Visit TeksysDPR",
-    capabilities: [
-      "Daily progress reporting with resources, work done, and observations",
-      "Target vs actual tracking across activities, packages, and projects",
-      "Delay identification, root cause analysis, and escalation workflows",
-      "Management dashboards with key metrics, milestones, and alerts",
-      "Schedule monitoring across milestones and critical path activities",
-      "Standardized reporting cadence and accountability for site teams",
-    ],
-  },
+  ...platforms.map((item) => ({
+    id: item.id === "bim" ? "teksysbim" : item.id === "erp" ? "teksyserp" : "teksysdpr",
+    name: item.name,
+    pillar: item.pillar,
+    colorHex: item.color,
+    tagline: item.tagline,
+    description: item.description,
+    portal: item.portal,
+    portalCta: item.portalCta,
+    capabilities:
+      item.id === "bim"
+        ? [
+            "BIM modeling and coordination across architecture, structure, and MEP",
+            "Clash and design review support with clearer project communication",
+            "Model-backed design intelligence for project and developer teams",
+            "CAD to BIM workflows for scalable digital transition",
+          ]
+        : item.id === "erp"
+          ? [
+              "Procurement, inventory, contracts, finance, HR, and CRM workflows",
+              "Stronger operational governance and process compliance control",
+              "Cross-functional visibility for business and project operations",
+              "Scalable enterprise workflows aligned to project-driven business models",
+            ]
+          : [
+              "Daily progress reporting with target vs actual performance tracking",
+              "Delay and variance visibility for management decision support",
+              "Execution dashboards with activity-level monitoring and control",
+              "Structured reporting discipline across site and PMO layers",
+            ],
+  })),
 ];
 
 export default function PortalsPage() {
   return (
     <>
-      {/* ── PAGE HERO ──────────────────────────────────── */}
       <section className="page-hero">
-        <div className="container-site" style={{ maxWidth: "860px" }}>
-          <div className="eyebrow">The Teksys Portals</div>
-          <h1 className="page-title">Three Portals. One Connected Digital Ecosystem.</h1>
+        <div className="container-site" style={{ maxWidth: "900px" }}>
+          <div className="eyebrow">Portals</div>
+          <h1 className="page-title">Explore the Teksys Digital Ecosystem</h1>
           <p className="lead" style={{ marginTop: "16px", maxWidth: "700px" }}>
-            TeksysBIM, TeksysERP, and TeksysDPR each solve a distinct layer of project-driven efficiency.
-            Use one platform to start — or connect all three as your digital foundation grows.
+            TeksysBIM, TeksysERP, and TeksysDPR are independent platforms with distinct value layers across design,
+            operations, and project execution.
           </p>
           <div style={{ display: "flex", gap: "10px", flexWrap: "wrap", marginTop: "26px" }}>
             {portals.map((p) => (
@@ -94,7 +68,6 @@ export default function PortalsPage() {
         </div>
       </section>
 
-      {/* ── PORTAL CARDS ───────────────────────────────── */}
       <section className="section">
         <div className="container-site" style={{ display: "flex", flexDirection: "column", gap: "28px" }}>
           {portals.map((portal) => (
@@ -112,7 +85,7 @@ export default function PortalsPage() {
                     >
                       {portal.name}
                     </span>
-                    <span className="portal-card-pillar" style={{ color: portal.colorHex }}>
+                    <span className="portal-card-pillar" style={{ color: portal.colorHex, textTransform: "none" }}>
                       {portal.pillar}
                     </span>
                   </div>
@@ -135,7 +108,7 @@ export default function PortalsPage() {
 
                 {/* Right column: capabilities */}
                 <div className="portal-card-right">
-                  <p className="portal-cap-heading">Key Capabilities</p>
+                  <p className="portal-cap-heading">Platform Capabilities</p>
                   <ul className="portal-cap-list">
                     {portal.capabilities.map((cap) => (
                       <li key={cap} className="portal-cap-item">
@@ -151,12 +124,11 @@ export default function PortalsPage() {
         </div>
       </section>
 
-      {/* ── ECOSYSTEM CONNECTION ───────────────────────── */}
       <section className="section section-muted">
         <div className="container-site">
           <div style={{ textAlign: "center", maxWidth: "680px", margin: "0 auto 36px" }}>
             <div className="eyebrow">Connected Model</div>
-            <h2 className="section-title">Independent Products. Unified Digital Trajectory.</h2>
+            <h2 className="section-title">Independent Platforms. Unified Digital Trajectory.</h2>
             <p className="lead" style={{ marginTop: "12px" }}>
               Each portal delivers value on its own. Together they form a complete digital foundation for
               project-driven organizations.
@@ -176,12 +148,11 @@ export default function PortalsPage() {
         </div>
       </section>
 
-      {/* ── CTA ────────────────────────────────────────── */}
       <section className="section">
         <div className="container-site">
           <div className="cta-panel" style={{ textAlign: "center" }}>
-            <h2 className="section-title" style={{ maxWidth: "640px", marginInline: "auto" }}>
-              Need guidance on which portal to start with?
+            <h2 className="section-title" style={{ maxWidth: "680px", marginInline: "auto" }}>
+              Need guidance on which platform to start with?
             </h2>
             <p className="lead" style={{ maxWidth: "560px", margin: "14px auto 26px" }}>
               We can map your priorities and recommend the right first platform with a phased expansion path.

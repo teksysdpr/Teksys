@@ -55,7 +55,7 @@ export default function SiteFooter() {
 
         <FooterColumn title="Solutions" links={footerLinks.solutions} />
         <FooterColumn title="Portals" links={footerLinks.portals} />
-        <FooterColumn title="Resources" links={footerLinks.resources} />
+        <FooterColumn title="Industries" links={footerLinks.industries} />
         <FooterColumn title="Company" links={footerLinks.company} />
       </div>
 

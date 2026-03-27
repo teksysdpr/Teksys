@@ -16,14 +16,18 @@ export default function SolutionsPage() {
           <div className="eyebrow">Solutions</div>
           <h1 className="page-title">Solutions Designed Around How Projects Actually Run</h1>
           <p className="lead" style={{ marginTop: "16px", maxWidth: "760px" }}>
-            Teksys combines specialized platforms and domain-led implementation services to connect design, operations,
-            and execution in one coherent digital strategy.
+            Teksys solutions are built for practical project environments where design intelligence, operations, and
+            execution reporting must work as one connected system.
           </p>
         </div>
       </section>
 
       <section className="section">
         <div className="container-site">
+          <div style={{ maxWidth: "760px", marginBottom: "22px" }}>
+            <div className="eyebrow">Core Solution Layers</div>
+            <h2 className="section-title">BIM, ERP, control, and executive visibility under one framework</h2>
+          </div>
           <div className="feature-grid-2">
             {solutionItems.map((item) => (
               <article key={item.id} id={item.id} className="glass-card info-card">
@@ -70,7 +74,7 @@ export default function SolutionsPage() {
         <div className="container-site">
           <div style={{ textAlign: "center", maxWidth: "760px", margin: "0 auto 34px" }}>
             <div className="eyebrow">Domain-Led Services</div>
-            <h2 className="section-title">Implementation and advisory support around each solution</h2>
+            <h2 className="section-title">Implementation services that make solutions operational</h2>
           </div>
           <div className="feature-grid-4">
             {services.map((service) => (
