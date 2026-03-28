@@ -2,7 +2,6 @@ import Link from "next/link";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Resources | Teksys",
   description:
     "Insights, case studies, industry notes, and downloads to support digital transformation in construction and project management.",
 };

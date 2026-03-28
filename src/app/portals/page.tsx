@@ -4,7 +4,6 @@ import Link from "next/link";
 import { platforms } from "@/lib/site-data";
 
 export const metadata: Metadata = {
-  title: "Portals | Teksys",
   description:
     "Explore TeksysBIM, TeksysERP, and TeksysDPR — three specialized platforms built to improve efficiency across design, operations, and project execution.",
 };

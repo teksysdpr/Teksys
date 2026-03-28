@@ -20,8 +20,8 @@ const sora = Sora({
 
 export const metadata: Metadata = {
   title: {
-    default: "Teksys — One Digital Ecosystem for BIM, ERP, and Project Control",
-    template: "%s | Teksys",
+    default: "Teksys",
+    template: "Teksys",
   },
   description:
     "Teksys is the corporate digital ecosystem brand connecting TeksysBIM, TeksysERP, and TeksysDPR for design intelligence, operational intelligence, and execution intelligence.",
@@ -49,7 +49,11 @@ export const metadata: Metadata = {
       "Where Design, Operations, and Execution Work as One. Teksys connects BIM, ERP, and DPR into one digital ecosystem for project-driven organizations.",
   },
   icons: {
-    icon: "/assets/teksys-main-logo.png",
+    icon: [
+      { url: "/assets/teksys-main-logo.png", type: "image/png" },
+    ],
+    shortcut: "/assets/teksys-main-logo.png",
+    apple: "/assets/teksys-main-logo.png",
   },
 };
 

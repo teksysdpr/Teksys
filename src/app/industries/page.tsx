@@ -3,7 +3,6 @@ import Link from "next/link";
 import { industries } from "@/lib/site-data";
 
 export const metadata: Metadata = {
-  title: "Industries",
   description:
     "Teksys is structured for real estate, EPC, infrastructure, industrial projects, and consultant-led project delivery environments.",
 };

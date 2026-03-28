@@ -3,7 +3,6 @@ import Link from "next/link";
 import { services, solutionItems } from "@/lib/site-data";
 
 export const metadata: Metadata = {
-  title: "Solutions",
   description:
     "Teksys solutions are designed around real project operating conditions across BIM, ERP, project controls, and management analytics.",
 };

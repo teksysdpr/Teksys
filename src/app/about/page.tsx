@@ -3,7 +3,6 @@ import Link from "next/link";
 import { industries, whyTeksys } from "@/lib/site-data";
 
 export const metadata: Metadata = {
-  title: "About",
   description:
     "Teksys is a domain-focused digital ecosystem brand for project-driven businesses across real estate, EPC, and infrastructure.",
 };
