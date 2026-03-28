@@ -18,7 +18,7 @@ export default function SiteHeader() {
             width={170}
             height={44}
             priority
-            style={{ width: "auto", height: "38px" }}
+            style={{ width: "auto", height: "44px" }}
           />
         </Link>
 
@@ -29,15 +29,6 @@ export default function SiteHeader() {
             </Link>
           ))}
         </nav>
-
-        <div className="header-ctas">
-          <Link href="/contact" className="btn-secondary btn-sm">
-            Book a Demo
-          </Link>
-          <Link href="/portals" className="btn-primary btn-sm">
-            Visit Portals
-          </Link>
-        </div>
 
         <button
           type="button"
@@ -70,14 +61,6 @@ export default function SiteHeader() {
                 {item.label}
               </Link>
             ))}
-            <div style={{ display: "flex", gap: "10px", paddingTop: "14px", flexWrap: "wrap" }}>
-              <Link href="/contact" className="btn-secondary btn-sm" onClick={() => setOpen(false)}>
-                Book a Demo
-              </Link>
-              <Link href="/portals" className="btn-primary btn-sm" onClick={() => setOpen(false)}>
-                Visit Portals
-              </Link>
-            </div>
           </div>
         </div>
       )}

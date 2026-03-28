@@ -58,7 +58,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="en" className={`${inter.variable} ${sora.variable}`}>
       <body className="page-shell">
         <SiteHeader />
-        <main>{children}</main>
+        <main className="site-main">{children}</main>
         <SiteFooter />
       </body>
     </html>

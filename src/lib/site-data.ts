@@ -13,10 +13,10 @@ export const siteMeta = {
 };
 
 export const navItems = [
-  { label: "Solutions", href: "/solutions" },
+  { label: "Home", href: "/" },
   { label: "Portals", href: "/portals" },
-  { label: "Industries", href: "/industries" },
-  { label: "About", href: "/about" },
+  { label: "Solutions", href: "/solutions" },
+  { label: "Resources", href: "/resources" },
   { label: "Contact", href: "/contact" },
 ];
 
@@ -28,14 +28,15 @@ export const platforms = [
     tagline:
       "Design intelligence for coordinated modeling, BIM workflows, project support, and cost clarity.",
     summary:
-      "Model-driven visibility for design coordination, review quality, and project-side decisions.",
+      "Design Intelligence for Better Coordination",
     description:
-      "TeksysBIM enables BIM-led design intelligence for coordinated delivery, technical reviews, and stronger project communication.",
+      "Strengthen model visibility, design coordination, BIM-led planning support, and digital project understanding.",
     internalHref: "/portals#teksysbim",
     solutionHref: "/solutions#bim-design-intelligence",
     portal: "https://bim.teksys.in",
     portalCta: "Visit TeksysBIM",
-    color: "#7df5b5",
+    color: "#52dfb0",
+    logoImage: "/images/hero-slider/BIM.png",
   },
   {
     id: "erp",
@@ -44,14 +45,15 @@ export const platforms = [
     tagline:
       "Operational control across procurement, contracts, inventory, finance, HR, CRM, and workflows.",
     summary:
-      "Connected workflows for stronger governance, process discipline, and business transparency.",
+      "Operational Efficiency Across Business Workflows",
     description:
-      "TeksysERP supports project-driven businesses with structured operational intelligence across core enterprise workflows.",
+      "Connect procurement, contracts, inventory, finance, HR, CRM, and internal business workflows in one structured environment.",
     internalHref: "/portals#teksyserp",
-    solutionHref: "/solutions#construction-erp",
+    solutionHref: "/solutions#connected-erp-workflows",
     portal: "https://erp.teksys.in",
     portalCta: "Visit TeksysERP",
-    color: "#93cdf6",
+    color: "#7fc4f5",
+    logoImage: "/images/hero-slider/ERP.png",
   },
   {
     id: "dpr",
@@ -60,14 +62,15 @@ export const platforms = [
     tagline:
       "Execution visibility through progress tracking, target vs actual, delay analysis, and management dashboards.",
     summary:
-      "Structured project control visibility for delivery teams and leadership.",
+      "Execution Visibility That Drives Project Control",
     description:
-      "TeksysDPR drives reporting discipline with target tracking, delay analysis, and decision-ready execution dashboards.",
+      "Improve progress tracking, target vs actual visibility, delay identification, and management reporting discipline.",
     internalHref: "/portals#teksysdpr",
     solutionHref: "/solutions#project-monitoring-control",
     portal: "https://dpr.teksys.in",
     portalCta: "Visit TeksysDPR",
-    color: "#d4f7a6",
+    color: "#b8aaff",
+    logoImage: "/images/hero-slider/DPR.png",
   },
 ];
 
@@ -157,10 +160,10 @@ export const solutionItems = [
       "For coordinated modeling, design visibility, and BIM-driven project decision support.",
   },
   {
-    id: "construction-erp",
-    title: "Construction ERP",
+    id: "connected-erp-workflows",
+    title: "Connected ERP Workflows",
     description:
-      "For procurement, inventory, contracts, finance, HR, CRM, and enterprise workflow governance.",
+      "For procurement, contracts, inventory, finance, HR, CRM, and enterprise workflow governance.",
   },
   {
     id: "project-monitoring-control",
@@ -169,8 +172,8 @@ export const solutionItems = [
       "For progress visibility, target vs actual analysis, delays, and management reporting discipline.",
   },
   {
-    id: "executive-dashboards-analytics",
-    title: "Executive Dashboards & Analytics",
+    id: "executive-reporting-visibility",
+    title: "Executive Reporting & Visibility",
     description:
       "For leadership-grade visibility across projects, operations, and strategic priorities.",
   },
@@ -183,10 +186,16 @@ export const solutionItems = [
 ];
 
 export const footerLinks = {
+  home: [
+    { label: "Home", href: "/" },
+    { label: "About", href: "/about" },
+    { label: "Contact", href: "/contact" },
+  ],
   solutions: [
     { label: "BIM Design Intelligence", href: "/solutions#bim-design-intelligence" },
-    { label: "Construction ERP", href: "/solutions#construction-erp" },
+    { label: "Connected ERP Workflows", href: "/solutions#connected-erp-workflows" },
     { label: "Project Monitoring & Control", href: "/solutions#project-monitoring-control" },
+    { label: "Executive Reporting & Visibility", href: "/solutions#executive-reporting-visibility" },
     {
       label: "Integrated Digital Transformation",
       href: "/solutions#integrated-digital-transformation",
@@ -197,21 +206,34 @@ export const footerLinks = {
     { label: "TeksysERP", href: "https://erp.teksys.in", external: true },
     { label: "TeksysDPR", href: "https://dpr.teksys.in", external: true },
   ],
-  industries: [
-    { label: "Real Estate Developers", href: "/industries#real-estate-developers" },
-    { label: "EPC Contractors", href: "/industries#epc-contractors" },
-    { label: "Infrastructure Companies", href: "/industries#infrastructure-companies" },
-    { label: "Industrial Projects", href: "/industries#industrial-projects" },
-    { label: "PMC / Consultant Teams", href: "/industries#pmc-consultant-teams" },
-  ],
-  company: [
-    { label: "About", href: "/about" },
-    { label: "Contact", href: "/contact" },
-    { label: "Insights", href: "#" },
-    { label: "Case Studies", href: "#" },
-    { label: "FAQ", href: "#" },
+  resources: [
+    { label: "Insights", href: "/resources#insights" },
+    { label: "Case Studies", href: "/resources#case-studies" },
+    { label: "Industry Notes", href: "/resources#industry-notes" },
+    { label: "FAQs", href: "/resources#faqs" },
+    { label: "Downloads / Brochures", href: "/resources#downloads-brochures" },
   ],
 };
+
+/**
+ * Customer logo data.
+ * Replace dummy entries with real logos for live deployment.
+ * For admin/CMS integration: expose this as an API or CMS collection —
+ * the CustomerLogoSlider component reads from this array directly and
+ * requires no structural changes when the data is updated.
+ */
+export const customerLogos = [
+  { id: "infracore", name: "Infracore Projects", abbr: "ICP" },
+  { id: "bhavani", name: "Bhavani Constructions", abbr: "BCL" },
+  { id: "landmark", name: "Landmark Developers", abbr: "LDG" },
+  { id: "greenfield", name: "Greenfield EPC", abbr: "GEP" },
+  { id: "meridian", name: "Meridian Builders", abbr: "MBL" },
+  { id: "apex", name: "Apex Infrastructure", abbr: "AIF" },
+  { id: "stellar", name: "StellarCon Group", abbr: "SCG" },
+  { id: "primeepc", name: "PrimeEPC Partners", abbr: "PEP" },
+  { id: "horizon", name: "Horizon Realty", abbr: "HRL" },
+  { id: "probuild", name: "ProBuild Ventures", abbr: "PBV" },
+];
 
 export const contactOptions = [
   "TeksysBIM",

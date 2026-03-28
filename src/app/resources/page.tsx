@@ -61,7 +61,7 @@ const resourceSections = [
     ],
   },
   {
-    id: "downloads",
+    id: "downloads-brochures",
     icon: "▥",
     title: "Downloads & Brochures",
     description:

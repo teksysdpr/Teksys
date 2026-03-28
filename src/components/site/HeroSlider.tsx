@@ -1,187 +1,177 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef } from "react";
-import Link from "next/link";
-import Image from "next/image";
+import { useState, useEffect, useCallback, useRef, type TouchEvent } from "react";
 
+/**
+ * Slide data — images are h1.jpg / h2.jpg / h3.jpg only.
+ * Each slide links to its respective portal.
+ */
 export const heroSlides = [
   {
-    id: "bim",
-    portal: "TeksysBIM",
-    colorHex: "#7df5b5",
-    tag: "Design Intelligence",
-    headline: "Design Intelligence for Better Coordination",
-    text: "Model coordination, design visibility, and BIM-led project understanding.",
-    image: "/images/portals/bim-slide-1.png",
-    href: "/portals#teksysbim",
-    externalHref: "https://bim.teksys.in",
+    id: "dpr",
+    eyebrow: "One Digital Ecosystem for BIM, ERP, and Project Control",
+    portalLabel: "TeksysDPR",
+    headline: "Digital Platforms That Improve Efficiency Across the Construction Sector",
+    subtext:
+      "Teksys connects design, operations, and execution through specialized digital platforms built for modern project-driven businesses.",
+    image: "/images/hero-slider/h1.jpg",
+    portalHref: "https://dpr.teksys.in",
+    ctaText: "Explore DPR Platform",
   },
   {
     id: "erp",
-    portal: "TeksysERP",
-    colorHex: "#93cdf6",
-    tag: "Operational Intelligence",
-    headline: "Operational Efficiency Across Business Workflows",
-    text: "Procurement, contracts, inventory, finance, and HR — connected and controlled.",
-    image: "/images/portals/erp-slide-1.png",
-    href: "/portals#teksyserp",
-    externalHref: "https://erp.teksys.in",
+    eyebrow: "One Digital Ecosystem for BIM, ERP, and Project Control",
+    portalLabel: "TeksysERP",
+    headline: "Smarter Coordination Across the Project Lifecycle",
+    subtext:
+      "From design intelligence to workflow control, Teksys helps teams work with stronger clarity, speed, and alignment.",
+    image: "/images/hero-slider/h2.jpg",
+    portalHref: "https://erp.teksys.in",
+    ctaText: "Explore ERP Platform",
   },
   {
-    id: "dpr",
-    portal: "TeksysDPR",
-    colorHex: "#d4f7a6",
-    tag: "Execution Intelligence",
-    headline: "Execution Visibility That Drives Project Control",
-    text: "Progress tracking, target vs actual, delay analysis, and management reporting.",
-    image: "/images/portals/dpr-slide-1.png",
-    href: "/portals#teksysdpr",
-    externalHref: "https://dpr.teksys.in",
+    id: "bim",
+    eyebrow: "One Digital Ecosystem for BIM, ERP, and Project Control",
+    portalLabel: "TeksysBIM",
+    headline: "A Connected Digital Foundation for Modern Construction",
+    subtext:
+      "Teksys enables better visibility, better decisions, and better control across complex project environments.",
+    image: "/images/hero-slider/h3.jpg",
+    portalHref: "https://bim.teksys.in",
+    ctaText: "Explore BIM Platform",
   },
 ];
 
 export default function HeroSlider() {
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
-  const [imgErrors, setImgErrors] = useState<Record<string, boolean>>({});
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const touchStartXRef = useRef<number | null>(null);
+  const touchStartYRef = useRef<number | null>(null);
 
   const next = useCallback(() => setActive((p) => (p + 1) % heroSlides.length), []);
   const prev = useCallback(() => setActive((p) => (p - 1 + heroSlides.length) % heroSlides.length), []);
 
   useEffect(() => {
     if (paused) return;
-    timerRef.current = setTimeout(next, 5000);
-    return () => { if (timerRef.current) clearTimeout(timerRef.current); };
+    timerRef.current = setTimeout(next, 5500);
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
   }, [active, paused, next]);
 
-  const slide = heroSlides[active];
+  const handleTouchStart = (event: TouchEvent<HTMLDivElement>) => {
+    const touch = event.touches[0];
+    touchStartXRef.current = touch.clientX;
+    touchStartYRef.current = touch.clientY;
+    setPaused(true);
+  };
+
+  const handleTouchEnd = (event: TouchEvent<HTMLDivElement>) => {
+    const startX = touchStartXRef.current;
+    const startY = touchStartYRef.current;
+    const touch = event.changedTouches[0];
+    touchStartXRef.current = null;
+    touchStartYRef.current = null;
+    setPaused(false);
+    if (startX === null || startY === null) return;
+    const dx = startX - touch.clientX;
+    const dy = Math.abs(startY - touch.clientY);
+    if (Math.abs(dx) < 42 || dy > 72) return;
+    if (dx > 0) next();
+    else prev();
+  };
+
+  const navigateToPortal = (href: string) => {
+    window.open(href, "_blank", "noopener,noreferrer");
+  };
 
   return (
     <div
-      className="portal-slider-panel"
+      className="fw-hero-slider"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+      onTouchCancel={() => {
+        touchStartXRef.current = null;
+        touchStartYRef.current = null;
+        setPaused(false);
+      }}
     >
       {/* Slides */}
       {heroSlides.map((s, i) => (
         <div
           key={s.id}
-          className={`portal-slide${i === active ? " portal-slide-active" : ""}`}
+          className={`fw-hero-slide${i === active ? " fw-hero-slide-active" : ""}`}
           aria-hidden={i !== active}
+          style={{ backgroundImage: `url(${s.image})` }}
+          onClick={() => navigateToPortal(s.portalHref)}
+          role="button"
+          tabIndex={i === active ? 0 : -1}
+          aria-label={`Visit ${s.portalLabel} portal`}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") navigateToPortal(s.portalHref);
+          }}
         >
-          {/* Background: real image or CSS mock */}
-          {!imgErrors[s.id] ? (
-            <div className="portal-slide-imgwrap">
-              <Image
-                src={s.image}
-                alt={`${s.portal} portal`}
-                fill
-                className="portal-slide-img"
-                onError={() => setImgErrors((e) => ({ ...e, [s.id]: true }))}
-                priority={i === 0}
-              />
-            </div>
-          ) : (
-            <PortalMock portal={s.portal} color={s.colorHex} tag={s.tag} />
-          )}
-
-          {/* Gradient overlay */}
-          <div className="portal-slide-overlay" />
-
-          {/* Bottom content strip */}
-          <div className="portal-slide-content">
-            <div className="portal-slide-tag" style={{ color: s.colorHex, borderColor: s.colorHex + "44" }}>
-              {s.portal}
-            </div>
-            <p className="portal-slide-headline">{s.headline}</p>
-            <p className="portal-slide-subtext">{s.text}</p>
-            <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
-              <Link href={s.href} className="btn-secondary btn-sm">Learn More</Link>
-              <a
-                href={s.externalHref}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-ghost btn-sm"
-                style={{ borderColor: s.colorHex + "55", color: s.colorHex }}
-              >
-                Visit ↗
-              </a>
-            </div>
-          </div>
+          {/* No overlays — clean image, whole slide is the portal link */}
         </div>
       ))}
 
-      {/* Arrows */}
-      <button type="button" className="pslider-arrow pslider-prev" onClick={prev} aria-label="Previous">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+      {/* Prev arrow */}
+      <button
+        type="button"
+        className="fw-pslider-arrow fw-pslider-prev"
+        onClick={(e) => {
+          e.stopPropagation();
+          prev();
+        }}
+        aria-label="Previous slide"
+      >
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
           <path d="M15 18l-6-6 6-6" />
         </svg>
       </button>
-      <button type="button" className="pslider-arrow pslider-next" onClick={next} aria-label="Next">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+
+      {/* Next arrow */}
+      <button
+        type="button"
+        className="fw-pslider-arrow fw-pslider-next"
+        onClick={(e) => {
+          e.stopPropagation();
+          next();
+        }}
+        aria-label="Next slide"
+      >
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
           <path d="M9 18l6-6-6-6" />
         </svg>
       </button>
 
-      {/* Dots */}
-      <div className="pslider-dots">
+      {/* Indicator dots */}
+      <div className="fw-pslider-dots">
         {heroSlides.map((s, i) => (
           <button
             key={s.id}
             type="button"
-            className={`pslider-dot${i === active ? " pslider-dot-active" : ""}`}
-            style={i === active ? { background: slide.colorHex } : {}}
-            onClick={() => setActive(i)}
-            aria-label={`Slide ${i + 1}`}
+            className={`fw-pslider-dot${i === active ? " fw-pslider-dot-active" : ""}`}
+            onClick={(e) => {
+              e.stopPropagation();
+              setActive(i);
+            }}
+            aria-label={`Go to slide ${i + 1}`}
           />
         ))}
       </div>
-    </div>
-  );
-}
 
-/* CSS mock-up shown when portal screenshot is not yet available */
-function PortalMock({ portal, color, tag }: { portal: string; color: string; tag: string }) {
-  return (
-    <div className="portal-mock">
-      {/* Mock top bar */}
-      <div className="pmock-topbar">
-        <div className="pmock-dot" style={{ background: color }} />
-        <div className="pmock-dot" style={{ background: color, opacity: 0.5 }} />
-        <div className="pmock-dot" style={{ background: color, opacity: 0.25 }} />
-        <div style={{ flex: 1 }} />
-        <span className="pmock-label" style={{ color }}>{portal}</span>
+      {/* Progress bar — restarts on each slide change */}
+      <div className="fw-hero-progress">
+        <div
+          key={`progress-${active}`}
+          className="fw-hero-progress-bar"
+          style={{ animationDuration: paused ? "0s" : "5.5s" }}
+        />
       </div>
-      {/* Mock sidebar + content */}
-      <div className="pmock-body">
-        <div className="pmock-sidebar">
-          {[85, 60, 72, 48, 68, 55].map((_, j) => (
-            <div key={j} className="pmock-nav-item" style={j === 0 ? { background: color + "22", borderColor: color + "55" } : {}} />
-          ))}
-        </div>
-        <div className="pmock-content">
-          <div className="pmock-heading" style={{ background: color + "33" }} />
-          <div className="pmock-cards">
-            {[color + "22", color + "11", color + "18", color + "0e"].map((bg, j) => (
-              <div key={j} className="pmock-card" style={{ background: bg, borderColor: color + "33" }}>
-                <div className="pmock-card-bar" style={{ background: color, width: `${[70, 45, 85, 55][j]}%`, opacity: 0.6 }} />
-              </div>
-            ))}
-          </div>
-          <div className="pmock-table">
-            {Array.from({ length: 4 }).map((_, j) => (
-              <div key={j} className="pmock-row" style={{ opacity: 1 - j * 0.15 }}>
-                <div className="pmock-cell" style={{ flex: 2, background: color + "18" }} />
-                <div className="pmock-cell" style={{ background: color + "12" }} />
-                <div className="pmock-cell" style={{ background: color + "0e" }} />
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-      {/* Tag label centered */}
-      <div className="pmock-tag" style={{ color, borderColor: color + "44" }}>{tag}</div>
     </div>
   );
 }

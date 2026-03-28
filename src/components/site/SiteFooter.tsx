@@ -53,10 +53,10 @@ export default function SiteFooter() {
           </p>
         </div>
 
-        <FooterColumn title="Solutions" links={footerLinks.solutions} />
+        <FooterColumn title="Home" links={footerLinks.home} />
         <FooterColumn title="Portals" links={footerLinks.portals} />
-        <FooterColumn title="Industries" links={footerLinks.industries} />
-        <FooterColumn title="Company" links={footerLinks.company} />
+        <FooterColumn title="Solutions" links={footerLinks.solutions} />
+        <FooterColumn title="Resources" links={footerLinks.resources} />
       </div>
 
       <div className="container-site footer-note">

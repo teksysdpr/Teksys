@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { platforms } from "@/lib/site-data";
 
@@ -46,14 +47,16 @@ export default function PortalsPage() {
   return (
     <>
       <section className="page-hero">
-        <div className="container-site" style={{ maxWidth: "900px" }}>
+        <div className="container-site">
           <div className="eyebrow">Portals</div>
-          <h1 className="page-title">Explore the Teksys Digital Ecosystem</h1>
-          <p className="lead" style={{ marginTop: "16px", maxWidth: "700px" }}>
-            TeksysBIM, TeksysERP, and TeksysDPR are independent platforms with distinct value layers across design,
-            operations, and project execution.
+          <h1 className="page-title" style={{ marginTop: "14px", maxWidth: "780px", marginInline: "auto" }}>
+            Explore the Teksys Digital Ecosystem
+          </h1>
+          <p className="lead" style={{ marginTop: "16px", maxWidth: "640px", marginInline: "auto" }}>
+            Teksys brings together three specialized platforms that strengthen design intelligence, business
+            workflows, and execution control across the construction lifecycle.
           </p>
-          <div style={{ display: "flex", gap: "10px", flexWrap: "wrap", marginTop: "26px" }}>
+          <div style={{ display: "flex", gap: "10px", flexWrap: "wrap", marginTop: "30px", justifyContent: "center" }}>
             {portals.map((p) => (
               <a
                 key={p.id}
@@ -78,6 +81,17 @@ export default function PortalsPage() {
               <div className="portal-card-body">
                 {/* Left column */}
                 <div className="portal-card-left">
+                  {/* Portal logo image */}
+                  {platforms.find((p) => `teksys${p.id}` === portal.id) && (
+                    <div className="portal-logo-box" style={{ marginBottom: "16px" }}>
+                      <Image
+                        src={platforms.find((p) => `teksys${p.id}` === portal.id)!.logoImage}
+                        alt={portal.name}
+                        width={220}
+                        height={56}
+                      />
+                    </div>
+                  )}
                   <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "12px" }}>
                     <span
                       className="portal-card-badge"
