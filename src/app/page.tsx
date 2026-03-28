@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import HeroSlider from "@/components/site/HeroSlider";
 import CustomerLogoSlider from "@/components/site/CustomerLogoSlider";
-import { platforms, solutionItems } from "@/lib/site-data";
+import { platforms } from "@/lib/site-data";
 
 /* ─── Portal impact (3 pillars) ─────────────────────────── */
 const portalImpact = [
@@ -32,45 +32,6 @@ const portalImpact = [
   },
 ];
 
-/* ─── Resource cards ─────────────────────────────────────── */
-const resourceCards = [
-  {
-    id: "insights",
-    title: "Insights",
-    description: "Short-form thinking on digital construction, coordination, reporting, and operational control.",
-    href: "/resources#insights",
-    tag: "Knowledge",
-  },
-  {
-    id: "case-studies",
-    title: "Case Studies",
-    description: "Illustrative examples of how connected platforms can improve project outcomes.",
-    href: "/resources#case-studies",
-    tag: "Outcomes",
-  },
-  {
-    id: "industry-notes",
-    title: "Industry Notes",
-    description: "Practical viewpoints on process gaps, inefficiencies, and digital transformation opportunities.",
-    href: "/resources#industry-notes",
-    tag: "Field Notes",
-  },
-  {
-    id: "faqs",
-    title: "FAQs",
-    description: "Clear answers to common questions around BIM, ERP, DPR, and connected platform use.",
-    href: "/resources#faqs",
-    tag: "Support",
-  },
-  {
-    id: "downloads",
-    title: "Downloads / Brochures",
-    description: "Future-ready space for brochures, presentations, capability notes, and customer material.",
-    href: "/resources#downloads-brochures",
-    tag: "Collateral",
-  },
-];
-
 /* ─── Benefit points ─────────────────────────────────────── */
 const benefitPoints = [
   "Better coordination across teams",
@@ -90,52 +51,8 @@ export default function HomePage() {
         <HeroSlider />
       </section>
 
-      {/* ── 2. Brand positioning strip ───────────────────── */}
-      <section className="section section-tight-top">
-        <div className="container-site">
-          <div style={{ textAlign: "center", maxWidth: "840px", margin: "0 auto 34px" }}>
-            <div className="eyebrow">One Digital Ecosystem</div>
-            <h2 className="section-title" style={{ marginTop: "14px", marginBottom: "16px" }}>
-              Where Design, Operations, and Execution Work as One
-            </h2>
-            <p className="lead">
-              Teksys helps project-driven organizations connect BIM, operational workflows, and project control
-              into a more visible, efficient, and coordinated digital ecosystem.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* ── 3. Portal impact: 3 pillars ──────────────────── */}
+      {/* ── 2. Portal Zone — immediately below hero slider ── */}
       <section className="section section-muted">
-        <div className="container-site">
-          <div style={{ textAlign: "center", maxWidth: "760px", margin: "0 auto 32px" }}>
-            <div className="eyebrow">How Teksys Works</div>
-            <h2 className="section-title" style={{ marginTop: "14px", marginBottom: "14px" }}>
-              How Teksys Improves Construction Efficiency
-            </h2>
-            <p className="lead">
-              Construction businesses often struggle because design information, business workflows, and site
-              execution are handled in disconnected systems. Teksys brings these layers together through
-              specialized digital platforms that improve visibility, coordination, and control.
-            </p>
-          </div>
-          <div className="portal-impact-grid">
-            {portalImpact.map((item) => (
-              <article key={item.id} className="glass-card portal-impact-card">
-                <p className="portal-impact-name" style={{ color: item.color }}>
-                  {item.label}
-                </p>
-                <h3>{item.name}</h3>
-                <p>{item.summary}</p>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── 4. Portals section — portal logo cards ───────── */}
-      <section className="section">
         <div className="container-site">
           <div style={{ textAlign: "center", maxWidth: "760px", margin: "0 auto 36px" }}>
             <div className="eyebrow">Portals</div>
@@ -158,7 +75,7 @@ export default function HomePage() {
                   className="portal-logo-img-wrap"
                   aria-label={`Visit ${platform.name}`}
                 >
-                  <div className="portal-logo-box">
+                  <div className={`portal-logo-box${platform.id === "bim" ? " portal-logo-box--bim" : platform.id === "erp" ? " portal-logo-box--erp" : ""}`}>
                     <Image
                       src={platform.logoImage}
                       alt={platform.name}
@@ -196,67 +113,51 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── 5. Solutions section ─────────────────────────── */}
+      {/* ── 3. Brand positioning strip ───────────────────── */}
+      <section className="section section-tight-top">
+        <div className="container-site">
+          <div style={{ textAlign: "center", maxWidth: "840px", margin: "0 auto 34px" }}>
+            <div className="eyebrow">One Digital Ecosystem</div>
+            <h2 className="section-title" style={{ marginTop: "14px", marginBottom: "16px" }}>
+              Where Design, Operations, and Execution Work as One
+            </h2>
+            <p className="lead">
+              Teksys helps project-driven organizations connect BIM, operational workflows, and project control
+              into a more visible, efficient, and coordinated digital ecosystem.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* ── 4. Portal impact: 3 pillars ──────────────────── */}
       <section className="section section-soft">
         <div className="container-site">
-          <div style={{ textAlign: "center", maxWidth: "780px", margin: "0 auto 36px" }}>
-            <div className="eyebrow">Solutions</div>
+          <div style={{ textAlign: "center", maxWidth: "760px", margin: "0 auto 32px" }}>
+            <div className="eyebrow">How Teksys Works</div>
             <h2 className="section-title" style={{ marginTop: "14px", marginBottom: "14px" }}>
-              Solutions Designed for Project-Driven Businesses
+              How Teksys Improves Construction Efficiency
             </h2>
             <p className="lead">
-              Teksys is built for organizations that need clearer coordination between design, operations, and
-              execution. Our solution layers help teams move from fragmented processes to connected digital
-              workflows.
+              Construction businesses often struggle because design information, business workflows, and site
+              execution are handled in disconnected systems. Teksys brings these layers together through
+              specialized digital platforms that improve visibility, coordination, and control.
             </p>
           </div>
-          <div className="solutions-grid">
-            {solutionItems.map((item) => (
-              <article key={item.id} className="glass-card solution-item-card">
-                <h3>{item.title}</h3>
-                <p>{item.description}</p>
-                <div style={{ marginTop: "14px" }}>
-                  <Link href={`/solutions#${item.id}`} className="btn-ghost btn-sm">
-                    View Solution
-                  </Link>
-                </div>
+          <div className="portal-impact-grid">
+            {portalImpact.map((item) => (
+              <article key={item.id} className="glass-card portal-impact-card">
+                <p className="portal-impact-name" style={{ color: item.color }}>
+                  {item.label}
+                </p>
+                <h3>{item.name}</h3>
+                <p>{item.summary}</p>
               </article>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── 6. Resources section ─────────────────────────── */}
-      <section className="section">
-        <div className="container-site">
-          <div style={{ textAlign: "center", maxWidth: "760px", margin: "0 auto 36px" }}>
-            <div className="eyebrow">Resources</div>
-            <h2 className="section-title" style={{ marginTop: "14px", marginBottom: "14px" }}>
-              Resources for Digital Construction and Project Efficiency
-            </h2>
-            <p className="lead">
-              Teksys is building not just digital platforms, but a stronger knowledge layer for organizations
-              navigating construction digitization.
-            </p>
-          </div>
-          <div className="resources-grid">
-            {resourceCards.map((card) => (
-              <article key={card.id} className="glass-card resource-card">
-                <span className="resource-card-tag">{card.tag}</span>
-                <h3>{card.title}</h3>
-                <p>{card.description}</p>
-                <div>
-                  <Link href={card.href} className="btn-ghost btn-sm">
-                    Open Resource
-                  </Link>
-                </div>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── 7. Benefits / Impact section ─────────────────── */}
+      {/* ── 5. Benefits / Impact section ─────────────────── */}
       <section className="section section-muted">
         <div className="container-site">
           <div style={{ textAlign: "center", maxWidth: "760px", margin: "0 auto 32px" }}>
@@ -280,10 +181,10 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── 8. Customer logo slider ───────────────────────── */}
+      {/* ── 6. Customer logo slider ───────────────────────── */}
       <CustomerLogoSlider />
 
-      {/* ── 9. CTA band ──────────────────────────────────── */}
+      {/* ── 7. CTA band ──────────────────────────────────── */}
       <section className="section section-cta-band">
         <div className="container-site">
           <div className="cta-band-inner">

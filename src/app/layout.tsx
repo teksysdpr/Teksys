@@ -50,10 +50,13 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: "/assets/teksys-main-logo.png", type: "image/png" },
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/assets/icon-192.png", type: "image/png", sizes: "192x192" },
     ],
-    shortcut: "/assets/teksys-main-logo.png",
-    apple: "/assets/teksys-main-logo.png",
+    shortcut: "/favicon.ico",
+    apple: [
+      { url: "/assets/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+    ],
   },
 };
 

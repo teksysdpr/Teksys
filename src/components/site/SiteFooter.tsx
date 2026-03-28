@@ -60,13 +60,8 @@ export default function SiteFooter() {
       </div>
 
       <div className="container-site footer-note">
-        <span>© {new Date().getFullYear()} Teksys. All rights reserved.</span>
-        <div style={{ display: "flex", gap: "14px", flexWrap: "wrap" }}>
-          <a href={`mailto:${siteMeta.email}`}>{siteMeta.email}</a>
-          <span>{siteMeta.phone}</span>
-          <Link href="#">Privacy Policy</Link>
-          <Link href="#">Terms</Link>
-        </div>
+        <span>© {new Date().getFullYear()} Teksys Enterprises (P) Ltd. Pune, Maharashtra, INDIA. All rights reserved.</span>
+        <a href="mailto:contact@teksys.in">contact@teksys.in</a>
       </div>
     </footer>
   );

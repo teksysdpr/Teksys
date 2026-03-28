@@ -35,6 +35,9 @@
   --erp: #7fc4f5;
   --dpr: #f3c98e;
 
+  /* Header height token — update here and all dependent sizes sync automatically */
+  --header-h: 76px;
+
   --radius-sm: 10px;
   --radius-md: 16px;
   --radius-lg: 22px;
@@ -53,11 +56,13 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden; /* Catch-all: prevent any element from causing horizontal scroll */
 }
 
 body {
   margin: 0;
   min-height: 100vh;
+  overflow-x: clip; /* clip (not hidden) so position:fixed header stays viewport-anchored */
   color: var(--text);
   background:
     radial-gradient(circle at 50% 12%, rgba(194, 142, 78, 0.13) 0%, transparent 28%),
@@ -198,9 +203,9 @@ ol {
   color: #2a1608;
   padding: 12px 22px;
   box-shadow: 0 10px 26px rgba(188, 134, 67, 0.32);
-  text-transform: uppercase;
-  font-size: 0.82rem;
-  letter-spacing: 0.06em;
+  /* No text-transform — portal names must render as TeksysBIM / TeksysERP / TeksysDPR */
+  font-size: 0.84rem;
+  letter-spacing: 0.02em;
 }
 
 .btn-primary:hover {
@@ -252,15 +257,15 @@ ol {
   background: rgba(10, 7, 5, 0.88);
 }
 
-/* Push all page content below the fixed header */
+/* Push all page content below the fixed header — uses --header-h token */
 .site-main {
-  padding-top: 76px;
+  padding-top: var(--header-h);
 }
 
 .site-header-inner {
   display: flex;
   align-items: center;
-  min-height: 76px;
+  min-height: var(--header-h);
   gap: 32px;
 }
 
@@ -328,16 +333,16 @@ ol {
   position: relative;
   width: 100%;
   overflow: hidden;
-  /* Pull hero up to start at y=0 — behind the fixed header */
-  margin-top: -76px;
 }
 
-/* Slider outer wrapper */
+/* Slider outer wrapper — fills remaining viewport below the header */
 .fw-hero-slider {
   position: relative;
   width: 100%;
-  min-height: 100dvh;
+  min-height: calc(100dvh - var(--header-h));
   overflow: hidden;
+  /* clip-path: inset(0) is the definitive iOS Safari fix — always clips regardless of transform animations */
+  clip-path: inset(0);
   background: var(--bg-2);
   user-select: none;
 }
@@ -360,6 +365,12 @@ ol {
 @keyframes fwSlideIn {
   from { opacity: 0; transform: scale(1.03); }
   to   { opacity: 1; transform: scale(1); }
+}
+
+/* Mobile version — fade only, no scale, eliminates transform-based overflow on iOS */
+@keyframes fwSlideInMobile {
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 
 /* Subtle bottom fade — provides readability for the visit button only */
@@ -523,22 +534,35 @@ ol {
  */
 .portal-logo-box {
   width: 100%;
-  height: 48px;
+  height: 56px;
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
+  /* No overflow: hidden — prevents logo artwork from being clipped */
   margin-bottom: 4px;
 }
 
 .portal-logo-box img {
   height: 100%;
   width: auto;
-  max-width: 200px;
+  max-width: 220px;
   object-fit: contain;
   object-position: center center;
-  /* Scale up to clip excess transparent canvas margin around logo artwork */
-  transform: scale(1.38);
+}
+
+/*
+ * TeksysBIM logo has significant transparent canvas padding in the source PNG.
+ * Scale up ~2× to normalise visual presence against DPR and ERP logos.
+ * Works without overflow: hidden so the artwork is never clipped.
+ */
+.portal-logo-box--bim img {
+  transform: scale(2.2);
+  transform-origin: center center;
+}
+
+/* TeksysERP logo — scale up 1.4× to increase visual presence */
+.portal-logo-box--erp img {
+  transform: scale(1.4);
   transform-origin: center center;
 }
 
@@ -852,112 +876,460 @@ ol {
   gap: 14px;
 }
 
-/* ─── Contact dual-panel layout ──────────────────────────── */
+/* ─── DPR-style Contact Form ─────────────────────────────── */
 
-.contact-panel-wrap {
+/* Outer shell: sidebar + form panel */
+.cf-shell {
   display: grid;
-  grid-template-columns: 0.85fr 1.15fr;
-  gap: 0;
-  border-radius: var(--radius-xl);
-  border: 1px solid var(--line-strong);
-  overflow: hidden;
-  box-shadow: var(--shadow-lg);
+  grid-template-columns: 300px 1fr;
+  gap: 24px;
+  align-items: start;
 }
 
-.contact-panel-left {
-  padding: clamp(28px, 4vw, 44px);
-  background:
-    radial-gradient(ellipse 70% 50% at 30% 10%, rgba(194, 142, 78, 0.18) 0%, transparent 60%),
-    linear-gradient(160deg, rgba(28, 18, 14, 0.98) 0%, rgba(18, 12, 9, 0.99) 100%);
-  border-right: 1px solid var(--line);
+/* ── Sidebar ─────────────────────────────────────────── */
+.cf-sidebar {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 20px;
+  position: sticky;
+  top: calc(var(--header-h) + 24px);
 }
 
-.contact-panel-left-kicker {
+.cf-stat-strip {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(184,170,255,0.2);
+  overflow: hidden;
+  background: rgba(184,170,255,0.06);
+}
+
+.cf-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 14px 8px;
+  background: rgba(12, 8, 6, 0.72);
+}
+
+.cf-stat-value {
+  font-family: var(--font-sora, system-ui, sans-serif);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #b8aaff;
+  line-height: 1;
+}
+
+.cf-stat-label {
+  font-size: 0.65rem;
+  color: var(--text-3);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-top: 4px;
+  text-align: center;
+}
+
+.cf-trust-block {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--surface-card);
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.cf-trust-heading {
+  margin: 0 0 4px;
   font-size: 0.68rem;
   font-weight: 700;
-  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--accent-2);
+  letter-spacing: 0.09em;
+  color: var(--text-3);
 }
 
-.contact-panel-left h2 {
-  margin: 0;
-  font-family: var(--font-sora, system-ui, sans-serif);
-  font-size: clamp(1.35rem, 2.4vw, 2rem);
-  line-height: 1.2;
-  letter-spacing: -0.022em;
-}
-
-.contact-panel-left p {
-  margin: 0;
-  color: var(--text-2);
-  font-size: 0.9rem;
-  line-height: 1.75;
-}
-
-.contact-trust-list {
-  display: grid;
-  gap: 8px;
-  margin-top: 6px;
-}
-
-.contact-trust-item {
+.cf-trust-item {
   display: flex;
   align-items: flex-start;
   gap: 10px;
-  border: 1px solid rgba(100, 65, 47, 0.3);
-  border-radius: var(--radius-sm);
-  padding: 10px 13px;
-  background: rgba(255, 240, 210, 0.03);
+  font-size: 0.83rem;
   color: var(--text-2);
-  font-size: 0.84rem;
   line-height: 1.55;
 }
 
-.contact-trust-dot {
-  margin-top: 5px;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--accent);
-  box-shadow: 0 0 8px var(--accent-glow);
+.cf-trust-icon {
+  font-size: 0.6rem;
+  color: #b8aaff;
+  margin-top: 4px;
   flex-shrink: 0;
 }
 
-.contact-meta {
-  margin-top: auto;
-  display: grid;
+.cf-meta {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--surface-card);
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
   gap: 5px;
 }
 
-.contact-meta a, .contact-meta span {
+.cf-meta-heading {
+  margin: 0 0 6px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
   color: var(--text-3);
+}
+
+.cf-meta-link {
+  color: var(--accent-2);
   font-size: 0.83rem;
+  transition: color 0.18s ease;
 }
 
-.contact-meta a:hover { color: var(--accent-2); }
+.cf-meta-link:hover { color: var(--accent); }
 
-.contact-panel-right {
-  padding: clamp(28px, 4vw, 44px);
-  background: rgba(12, 8, 6, 0.7);
+.cf-meta-address {
+  margin: 6px 0 0;
+  font-size: 0.78rem;
+  color: var(--text-3);
+  line-height: 1.6;
 }
 
-.contact-form-title {
+.cf-portal-links {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--surface-card);
+  padding: 16px 18px;
+}
+
+.cf-portal-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  font-size: 0.83rem;
+  font-weight: 600;
+  transition: background 0.18s ease, border-color 0.18s ease;
+}
+
+.cf-portal-link:hover { background: rgba(255,255,255,0.04); }
+
+.cf-portal-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.cf-portal-arrow {
+  margin-left: auto;
+  opacity: 0.5;
+  font-size: 0.78rem;
+}
+
+/* ── Form panel ──────────────────────────────────────── */
+.cf-form-panel {
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  background:
+    radial-gradient(ellipse 60% 30% at 80% 0%, rgba(184,170,255,0.06) 0%, transparent 60%),
+    rgba(10, 7, 5, 0.92);
+}
+
+/* ── Step progress header ────────────────────────────── */
+.cf-stepper {
+  display: flex;
+  align-items: center;
+  padding: 24px 28px 0;
+  gap: 0;
+}
+
+.cf-step-wrap {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.cf-step-wrap:last-child { flex: 0 0 auto; }
+
+.cf-step {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.cf-step-circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid var(--line-strong);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-3);
+  background: rgba(22, 14, 10, 0.9);
+  flex-shrink: 0;
+  transition: all 0.28s ease;
+}
+
+.cf-step-active .cf-step-circle {
+  border-color: #b8aaff;
+  background: rgba(184, 170, 255, 0.12);
+  color: #b8aaff;
+  box-shadow: 0 0 0 4px rgba(184, 170, 255, 0.12);
+}
+
+.cf-step-done .cf-step-circle {
+  border-color: #52dfb0;
+  background: rgba(82, 223, 176, 0.14);
+  color: #52dfb0;
+}
+
+.cf-step-labels {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.cf-step-name {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-3);
+  transition: color 0.28s ease;
+}
+
+.cf-step-active .cf-step-name { color: #b8aaff; }
+.cf-step-done .cf-step-name { color: #52dfb0; }
+
+.cf-step-sub {
+  font-size: 0.68rem;
+  color: var(--text-3);
+  opacity: 0.6;
+}
+
+.cf-step-connector {
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+  margin: 0 10px;
+  transition: background 0.36s ease;
+}
+
+.cf-step-connector-done { background: rgba(82, 223, 176, 0.4); }
+
+/* Thin animated progress track */
+.cf-progress-track {
+  margin: 18px 28px 0;
+  height: 2px;
+  background: rgba(100, 65, 47, 0.2);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.cf-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #b8aaff, #52dfb0);
+  border-radius: 2px;
+  transition: width 0.42s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── Step body ───────────────────────────────────────── */
+.cf-step-body {
+  padding: 28px 28px 0;
+}
+
+.cf-step-header { margin-bottom: 22px; }
+
+.cf-step-tag {
+  display: inline-block;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #b8aaff;
+  margin-bottom: 8px;
+}
+
+.cf-step-title {
   margin: 0 0 6px;
   font-family: var(--font-sora, system-ui, sans-serif);
-  font-size: clamp(1.1rem, 1.8vw, 1.5rem);
+  font-size: clamp(1.2rem, 2vw, 1.55rem);
+  letter-spacing: -0.018em;
+  line-height: 1.2;
+}
+
+.cf-step-desc {
+  margin: 0;
+  color: var(--text-3);
+  font-size: 0.88rem;
+  line-height: 1.6;
+}
+
+.cf-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.cf-field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.cf-field-group { display: flex; flex-direction: column; gap: 6px; }
+
+.cf-required { color: #b8aaff; margin-left: 2px; }
+
+/* Interest option buttons (step 3) */
+.cf-option-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.cf-option-btn {
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--line);
+  background: rgba(22, 14, 10, 0.6);
+  color: var(--text-2);
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  line-height: 1.4;
+}
+
+.cf-option-btn:hover {
+  border-color: rgba(184,170,255,0.4);
+  background: rgba(184,170,255,0.06);
+  color: #b8aaff;
+}
+
+.cf-option-btn-active {
+  border-color: rgba(184,170,255,0.6) !important;
+  background: rgba(184,170,255,0.12) !important;
+  color: #b8aaff !important;
+  box-shadow: 0 0 0 3px rgba(184,170,255,0.1);
+}
+
+/* Summary review card */
+.cf-summary-card {
+  border: 1px solid rgba(184,170,255,0.2);
+  border-radius: var(--radius-sm);
+  background: rgba(184,170,255,0.05);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.cf-summary-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: #b8aaff;
+  margin: 0;
+}
+
+.cf-summary-value {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text);
+  margin: 0;
+}
+
+.cf-summary-meta {
+  font-size: 0.8rem;
+  color: var(--text-3);
+  margin: 0;
+}
+
+/* ── Navigation footer ───────────────────────────────── */
+.cf-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 28px 28px;
+  margin-top: 22px;
+  border-top: 1px solid var(--line);
+}
+
+.cf-nav-hint {
+  font-size: 0.75rem;
+  color: var(--text-3);
+  margin-right: 10px;
+}
+
+/* ── Success state ───────────────────────────────────── */
+.cf-success {
+  padding: clamp(40px, 6vw, 72px) 28px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.cf-success-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: 2px solid #52dfb0;
+  background: rgba(82, 223, 176, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #52dfb0;
+  margin-bottom: 4px;
+}
+
+.cf-success-title {
+  margin: 0;
+  font-family: var(--font-sora, system-ui, sans-serif);
+  font-size: 1.45rem;
   letter-spacing: -0.016em;
 }
 
-.contact-form-sub {
-  margin: 0 0 20px;
-  color: var(--text-3);
-  font-size: 0.85rem;
-  line-height: 1.65;
+.cf-success-msg {
+  margin: 0;
+  color: var(--text-2);
+  font-size: 0.92rem;
+  line-height: 1.72;
+  max-width: 460px;
 }
+
+/* ── Responsive ──────────────────────────────────────── */
+@media (max-width: 900px) {
+  .cf-shell { grid-template-columns: 1fr; }
+  .cf-sidebar { position: static; }
+}
+
+@media (max-width: 600px) {
+  .cf-stepper { padding: 18px 18px 0; gap: 0; }
+  .cf-step-labels { display: none; }
+  .cf-progress-track { margin: 14px 18px 0; }
+  .cf-step-body { padding: 20px 18px 0; }
+  .cf-field-row { grid-template-columns: 1fr; }
+  .cf-option-grid { grid-template-columns: 1fr; }
+  .cf-nav { padding: 18px 18px 22px; }
+}
+
+/* ─── Legacy contact panel classes (kept for safety) ─────── */
 
 .contact-notice-ok {
   border-radius: var(--radius-md);
@@ -989,6 +1361,7 @@ ol {
 
 .logo-marquee-section {
   overflow: hidden;
+  clip-path: inset(0); /* iOS Safari: guarantees clipping even with mask-image interference */
   border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
   padding-block: clamp(36px, 4.5vw, 56px);
@@ -1214,14 +1587,15 @@ ol {
 
 .portal-card-badge {
   display: inline-block;
-  font-size: 0.68rem;
+  font-size: 0.72rem;
   font-weight: 700;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  /* No text-transform: portal names must render as TeksysBIM / TeksysERP / TeksysDPR */
   padding: 4px 11px;
   border-radius: 999px;
   border: 1px solid;
 }
+/* Pillar text (Design Intelligence etc.) can stay uppercase — it is not a portal name */
 .portal-card-pillar { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; }
 .portal-card-title { margin: 0 0 12px; font-family: var(--font-sora, system-ui, sans-serif); font-size: clamp(1.1rem, 2vw, 1.45rem); line-height: 1.25; letter-spacing: -0.018em; }
 .portal-card-desc { margin: 0; color: var(--text-2); font-size: 0.9rem; line-height: 1.72; }
@@ -1251,6 +1625,9 @@ ol {
 }
 
 @media (max-width: 920px) {
+  /* Shrink header token — site-main padding and slider height update automatically */
+  :root { --header-h: 68px; }
+
   .split-layout, .hero-grid, .hero-grid-main { grid-template-columns: 1fr; }
   .feature-grid-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .portal-impact-grid, .portals-section-grid, .solutions-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -1261,16 +1638,19 @@ ol {
   .header-nav, .header-ctas { display: none; }
   .mobile-toggle { display: inline-flex; margin-left: auto; }
 
-  .fw-hero-slider { min-height: clamp(400px, 72vh, 680px); }
+  /* Tablet portrait: proportional banner — not full viewport height */
+  .fw-hero-slider {
+    height: clamp(300px, 42vh, 480px);
+    min-height: 0;
+  }
   .fw-pslider-prev { left: 12px; }
   .fw-pslider-next { right: 12px; }
-
-  .site-header-inner { min-height: 68px; }
-  .site-main { padding-top: 68px; }
-  .fw-hero-section { margin-top: -68px; }
 }
 
 @media (max-width: 700px) {
+  /* Shrink header token for mobile — all dependent sizes stay in sync */
+  :root { --header-h: 62px; }
+
   .feature-grid-3, .feature-grid-2, .value-pill-grid, .form-grid-2,
   .quick-card-grid, .portal-impact-grid, .portals-section-grid,
   .solutions-grid, .resources-grid, .benefits-grid { grid-template-columns: 1fr; }
@@ -1279,16 +1659,29 @@ ol {
   .ecosystem-arrow { width: auto; min-height: 26px; transform: rotate(90deg); }
   .footer-main { grid-template-columns: 1fr 1fr; }
 
-  .fw-hero-slider { min-height: 100dvh; }
-  .fw-pslider-arrow { width: 38px; height: 38px; }
+  /* Phone portrait: compact controlled banner — NOT full viewport height */
+  .fw-hero-slider {
+    height: clamp(220px, 36vh, 340px);
+    min-height: 0;
+  }
+  /* Image centres vertically in the shorter banner frame */
+  .fw-hero-slide { background-position: center center; }
+  .fw-pslider-arrow { width: 36px; height: 36px; }
   .fw-pslider-prev { left: 8px; }
   .fw-pslider-next { right: 8px; }
+  /* Progress bar dots tighter on small screen */
+  .fw-pslider-dots { bottom: 12px; gap: 5px; }
 
-  .site-header-inner { min-height: 62px; }
-  .site-main { padding-top: 62px; }
-  .fw-hero-section { margin-top: -62px; }
+  /* Fade-only animation on mobile — no scale transform that could overflow */
+  .fw-hero-slide-active { animation-name: fwSlideInMobile; }
 }
 
 @media (max-width: 520px) {
   .footer-main { grid-template-columns: 1fr; }
+
+  /* Small phones (iPhone SE, Android compact): tighter hero banner */
+  .fw-hero-slider {
+    height: clamp(190px, 30vh, 260px);
+    min-height: 0;
+  }
 }

@@ -70,7 +70,7 @@ export default function PortalsPage() {
         </div>
       </section>
 
-      <section className="section">
+      <section className="section section-tight-top">
         <div className="container-site" style={{ display: "flex", flexDirection: "column", gap: "28px" }}>
           {portals.map((portal) => (
             <article key={portal.id} id={portal.id} className="glass-card portal-card" style={{ scrollMarginTop: "80px" }}>
@@ -82,7 +82,10 @@ export default function PortalsPage() {
                 <div className="portal-card-left">
                   {/* Portal logo image */}
                   {platforms.find((p) => `teksys${p.id}` === portal.id) && (
-                    <div className="portal-logo-box" style={{ marginBottom: "16px" }}>
+                    <div
+                      className={`portal-logo-box${portal.id === "teksysbim" ? " portal-logo-box--bim" : portal.id === "teksyserp" ? " portal-logo-box--erp" : ""}`}
+                      style={{ marginBottom: "16px" }}
+                    >
                       <Image
                         src={platforms.find((p) => `teksys${p.id}` === portal.id)!.logoImage}
                         alt={portal.name}
@@ -137,7 +140,7 @@ export default function PortalsPage() {
         </div>
       </section>
 
-      <section className="section section-muted">
+      <section className="section section-muted section-tight-top">
         <div className="container-site">
           <div style={{ textAlign: "center", maxWidth: "680px", margin: "0 auto 36px" }}>
             <div className="eyebrow">Connected Model</div>
@@ -161,7 +164,7 @@ export default function PortalsPage() {
         </div>
       </section>
 
-      <section className="section">
+      <section className="section section-tight-top">
         <div className="container-site">
           <div className="cta-panel" style={{ textAlign: "center" }}>
             <h2 className="section-title" style={{ maxWidth: "680px", marginInline: "auto" }}>
